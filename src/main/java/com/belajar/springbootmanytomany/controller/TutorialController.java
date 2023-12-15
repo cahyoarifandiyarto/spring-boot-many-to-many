@@ -1,6 +1,7 @@
 package com.belajar.springbootmanytomany.controller;
 
 import com.belajar.springbootmanytomany.model.CreateTutorialRequest;
+import com.belajar.springbootmanytomany.model.GetTutorialByIdResponse;
 import com.belajar.springbootmanytomany.model.GetTutorialListResponse;
 import com.belajar.springbootmanytomany.model.Response;
 import com.belajar.springbootmanytomany.service.TutorialService;
@@ -34,6 +35,15 @@ public class TutorialController {
         List<GetTutorialListResponse> getTutorialListResponseList = tutorialService.getList();
 
         Response<List<GetTutorialListResponse>> response = ResponseUtil.build(getTutorialListResponseList, null, null, HttpStatus.OK);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Response<GetTutorialByIdResponse>> getById(@PathVariable Long id) {
+        GetTutorialByIdResponse getTutorialByIdResponse = tutorialService.getById(id);
+
+        Response<GetTutorialByIdResponse> response = ResponseUtil.build(getTutorialByIdResponse, null, null, HttpStatus.OK);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

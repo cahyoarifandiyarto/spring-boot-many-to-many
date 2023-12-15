@@ -4,6 +4,7 @@ import com.belajar.springbootmanytomany.entity.Tag;
 import com.belajar.springbootmanytomany.entity.Tutorial;
 import com.belajar.springbootmanytomany.exception.ErrorException;
 import com.belajar.springbootmanytomany.model.CreateTutorialRequest;
+import com.belajar.springbootmanytomany.model.GetTutorialByIdResponse;
 import com.belajar.springbootmanytomany.model.GetTutorialListResponse;
 import com.belajar.springbootmanytomany.repository.TagRepository;
 import com.belajar.springbootmanytomany.repository.TutorialRepository;
@@ -64,6 +65,25 @@ public class TutorialServiceImpl implements TutorialService {
                                 .toList())
                         .build())
                 .toList();
+    }
+
+    @Override
+    public GetTutorialByIdResponse getById(Long id) {
+        Tutorial tutorial = tutorialRepository.findJoinTagById(id)
+                .orElseThrow(() -> new ErrorException(null, null, HttpStatus.NOT_FOUND));
+
+        return GetTutorialByIdResponse.builder()
+                .id(tutorial.getId())
+                .title(tutorial.getTitle())
+                .description(tutorial.getDescription())
+                .published(tutorial.getPublished())
+                .tags(tutorial.getTags().stream()
+                        .map(tag -> GetTutorialByIdResponse.Tag.builder()
+                                .id(tag.getId())
+                                .name(tag.getName())
+                                .build())
+                        .toList())
+                .build();
     }
 
 }
